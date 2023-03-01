@@ -3,7 +3,9 @@
 /node_modules
 
 # ENV
-
+.env
+docker-compose.yml
+Makefile
 # Logs
 logs
 *.log
