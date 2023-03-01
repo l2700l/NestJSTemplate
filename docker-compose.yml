@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  # app:
+  #   image: "node:lts-alpine"
+  #   build:
+  #     context: .
+  #   user: "node"
+  #   working_dir: /usr/src/app
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/app/node_modules
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - ${APP_PORT}:3000
+  #   tty: true
+  #   command: "npm run start"
+  #   depends_on:
+  #     - redis
+  #     - postgres
+  #   networks:
+  #     - appnet
+  postgres:
+    image: postgres:15.1-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - './.docker/postgres/:/docker-entrypoint-initdb.d/'
+  redis:
+    image: redis:7.0.8-alpine
+    volumes:
+      - .docker/redis:/data
+    command: [sh, -c, "rm -f /data/dump.rdb && redis-server --save '' --requirepass password"]
+    ports:
+      - "6379:6379"
